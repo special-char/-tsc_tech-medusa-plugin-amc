@@ -23,6 +23,7 @@ import { Photo, Spinner } from "@medusajs/icons";
 import ErrorMessage from "../ErrorMessage";
 import { useVariantTableQuery } from "../../hooks/use-variant-table-query";
 import { sdk } from "../../lib/sdk";
+import VariantPricingForm from "../VariantPricingForm";
 type Props = {
   form: UseFormReturn<any, any, undefined>;
   onSubmit: (data: any) => void;
@@ -228,7 +229,7 @@ const AmcDetail = (props: Props) => {
         "title",
         "sku",
         "barcode",
-        "variants",
+        // "variants",
       ]);
       // &&
       // Array.isArray(variant) &&
@@ -265,7 +266,7 @@ const AmcDetail = (props: Props) => {
           "title",
           "sku",
           "barcode",
-          "variants",
+          // "variants",
         ]);
         // &&
         // Array.isArray(variant) &&
@@ -485,7 +486,7 @@ const AmcDetail = (props: Props) => {
             </ProgressTabs.Content>
 
             <ProgressTabs.Content value={AmcCreateTab.AMC_PRICE}>
-              {AmcCreateTab.AMC_PRICE}
+              <VariantPricingForm form={props.form} />
             </ProgressTabs.Content>
           </RouteFocusModal.Body>
         </ProgressTabs>
