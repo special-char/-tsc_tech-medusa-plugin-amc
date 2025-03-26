@@ -224,10 +224,15 @@ const AmcDetail = (props: Props) => {
     if (tab === AmcCreateTab.AMC_PRICE) {
       const variant = props.form.watch("variants");
 
-      const valid =
-        (await props.form.trigger(["title", "sku", "barcode", "variants"])) &&
-        Array.isArray(variant) &&
-        variant.length > 0;
+      const valid = await props.form.trigger([
+        "title",
+        "sku",
+        "barcode",
+        "variants",
+      ]);
+      // &&
+      // Array.isArray(variant) &&
+      // variant.length > 0;
 
       if (!valid) {
         return;
@@ -256,10 +261,15 @@ const AmcDetail = (props: Props) => {
       }
       case AmcCreateTab.AMC_PRODUCTS: {
         const variant = props.form.watch("variants");
-        const valid =
-          (await props.form.trigger(["title", "sku", "barcode", "variants"])) &&
-          Array.isArray(variant) &&
-          variant.length > 0;
+        const valid = await props.form.trigger([
+          "title",
+          "sku",
+          "barcode",
+          "variants",
+        ]);
+        // &&
+        // Array.isArray(variant) &&
+        // variant.length > 0;
 
         if (valid) {
           handleTabChange(AmcCreateTab.AMC_PRICE);
@@ -330,30 +340,34 @@ const AmcDetail = (props: Props) => {
           className="flex h-full flex-col overflow-hidden"
         >
           <RouteFocusModal.Header>
-            <ProgressTabs.List className="grid w-full grid-cols-4">
-              <ProgressTabs.Trigger
-                className="w-full"
-                value={AmcCreateTab.AMC_DETAILS}
-                status={tabState[AmcCreateTab.AMC_DETAILS]}
-              >
-                AMC Details
-              </ProgressTabs.Trigger>
+            <div className="flex w-full items-center justify-between gap-x-4">
+              <div className="-my-2 w-full max-w-[600px] border-l">
+                <ProgressTabs.List className="grid w-full grid-cols-4">
+                  <ProgressTabs.Trigger
+                    className="w-full"
+                    value={AmcCreateTab.AMC_DETAILS}
+                    status={tabState[AmcCreateTab.AMC_DETAILS]}
+                  >
+                    AMC Details
+                  </ProgressTabs.Trigger>
 
-              <ProgressTabs.Trigger
-                className="w-full"
-                value={AmcCreateTab.AMC_PRODUCTS}
-                status={tabState[AmcCreateTab.AMC_PRODUCTS]}
-              >
-                AMC Products
-              </ProgressTabs.Trigger>
-              <ProgressTabs.Trigger
-                className="w-full"
-                value={AmcCreateTab.AMC_PRICE}
-                status={tabState[AmcCreateTab.AMC_PRICE]}
-              >
-                AMC Price
-              </ProgressTabs.Trigger>
-            </ProgressTabs.List>
+                  <ProgressTabs.Trigger
+                    className="w-full"
+                    value={AmcCreateTab.AMC_PRODUCTS}
+                    status={tabState[AmcCreateTab.AMC_PRODUCTS]}
+                  >
+                    AMC Products
+                  </ProgressTabs.Trigger>
+                  <ProgressTabs.Trigger
+                    className="w-full"
+                    value={AmcCreateTab.AMC_PRICE}
+                    status={tabState[AmcCreateTab.AMC_PRICE]}
+                  >
+                    AMC Price
+                  </ProgressTabs.Trigger>
+                </ProgressTabs.List>
+              </div>
+            </div>
           </RouteFocusModal.Header>
           <RouteFocusModal.Body className="size-full overflow-hidden">
             <ProgressTabs.Content
