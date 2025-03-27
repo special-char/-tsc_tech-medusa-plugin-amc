@@ -44,7 +44,7 @@ const columns = [
   }),
 ];
 
-export function DataTableComponent({}) {
+export function AmcListTable({}) {
   const { data, isLoading } = useQuery({
     queryFn: () =>
       sdk.client.fetch(`/admin/amc`, {
@@ -58,16 +58,10 @@ export function DataTableComponent({}) {
     return ((data as any)?.data as any[]) || [];
   }, [(data as any)?.data]);
 
-  console.log("amcData", amcData);
-
   const table = useDataTable({
     data: amcData,
     columns: columns as unknown as any,
     rowCount: amcData?.length,
-    // sorting: {
-    //   state: sorting,
-    //   onSortingChange: setSorting,
-    // },
     isLoading,
     pagination: {
       onPaginationChange: () => {},
