@@ -67,7 +67,13 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   const result = await addAMCToCartWorkflow(req.scope).run({
     input: {
       cart_id: cart_id,
-      items: [{ variant_id, quantity, metadata }],
+      items: [
+        {
+          variant_id,
+          quantity,
+          metadata: { ...metadata, variant_id: vId, amc_id: variant_id },
+        },
+      ],
       amcUpdate,
     },
   });
