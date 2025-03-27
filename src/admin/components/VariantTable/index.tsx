@@ -30,7 +30,6 @@ const columns = (props: Props) => [
       ? {
           header: ({ table }) => {
             const currentVariants = props.form.getValues("variants") || [];
-            console.log({ currentVariants });
             return (
               <Controller
                 control={props.form.control}
@@ -38,23 +37,19 @@ const columns = (props: Props) => [
                 render={({ field }) => {
                   // Get the actual rows on the current page
                   const currentPageRows = table.getRowModel().rows;
-                  console.log({ currentPageRows });
                   // Get all visible variant IDs from current page using actual rows
                   const visibleVariantIds = currentPageRows
                     .map((row) => row.original?.id)
                     .filter(Boolean);
 
-                  console.log({ visibleVariantIds });
                   // Check if all visible variants are selected
                   const allVisibleSelected = visibleVariantIds.every((id) =>
                     currentVariants.includes(id)
                   );
-                  console.log({ allVisibleSelected });
                   // Check if some (but not all) visible variants are selected
                   const someVisibleSelected = visibleVariantIds.some((id) =>
                     currentVariants.includes(id)
                   );
-                  console.log({ someVisibleSelected });
 
                   // Determine checkbox state
                   let checkboxState: CheckboxCheckedState = false;
