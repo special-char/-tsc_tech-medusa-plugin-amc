@@ -18,6 +18,7 @@ export const POST = async (
   res: MedusaResponse
 ) => {
   const { variant_id, title, sku, barcode, prices, duration } = req.body;
+  console.log("🚀 ~ req.body:", req.body);
 
   // first store amc details
   const amcService: AMCModuleService = req.scope.resolve(AMC_MODULE);
@@ -31,7 +32,7 @@ export const POST = async (
   // add product amc link
   const remoteLink = container.resolve("remoteLink");
   const links: LinkDefinition[] = [];
-  variant_id.map((v_id: string) =>
+  variant_id?.map((v_id: string) =>
     links.push({
       [AMC_MODULE]: {
         amc_id: amc.id,
@@ -80,7 +81,6 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   // 		},
   // 	}
   // );
-  // console.dir(price, { depth: null });
 
   const amc = await query.graph({
     entity: "amc",
