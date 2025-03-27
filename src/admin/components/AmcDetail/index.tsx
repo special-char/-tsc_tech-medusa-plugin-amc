@@ -15,6 +15,7 @@ import { Spinner } from "@medusajs/icons";
 import ErrorMessage from "../ErrorMessage";
 import VariantPricingForm from "../VariantPricingForm";
 import VariantTable from "../VariantTable";
+
 type Props = {
   form: UseFormReturn<any, any, undefined>;
   onSubmit: (data: any) => void;
