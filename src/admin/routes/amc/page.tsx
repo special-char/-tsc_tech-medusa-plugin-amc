@@ -1,11 +1,11 @@
 import { BuildingStorefront } from "@medusajs/icons";
 import { defineRouteConfig } from "@medusajs/admin-sdk";
-import { DataTableComponent } from "../../components/DataTable";
+import { AmcListTable } from "../../components/DataTable";
 
 const AmcList = () => {
   return (
     <div>
-      <DataTableComponent />
+      <AmcListTable />
     </div>
   );
 };
