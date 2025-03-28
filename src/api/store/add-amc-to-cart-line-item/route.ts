@@ -10,6 +10,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     quantity,
     metadata,
     cart_id,
+    order_line_item_id,
   }: any = req.body;
 
   const pricingModuleService = container.resolve(Modules.PRICING);
@@ -67,7 +68,18 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   const result = await addAMCToCartWorkflow(req.scope).run({
     input: {
       cart_id: cart_id,
-      items: [{ variant_id, quantity, metadata }],
+      items: [
+        {
+          variant_id,
+          quantity,
+          metadata: {
+            ...metadata,
+            variant_id: vId,
+            amc_id: variant_id,
+            order_line_item_id: order_line_item_id,
+          },
+        },
+      ],
       amcUpdate,
     },
   });
