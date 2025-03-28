@@ -18,7 +18,6 @@ export const POST = async (
   res: MedusaResponse
 ) => {
   const { variant_id, title, sku, barcode, prices, duration } = req.body;
-  console.log("🚀 ~ req.body:", req.body);
 
   // first store amc details
   const amcService: AMCModuleService = req.scope.resolve(AMC_MODULE);
