@@ -4,6 +4,7 @@ export const StoreAddCartLineItem = z.object({
   cart_id: z.string(),
   amc_id: z.string(),
   variant_id: z.string(),
+  order_line_item_id: z.string(),
   quantity: z.number(),
   metadata: z.record(z.unknown()).nullish(),
 });

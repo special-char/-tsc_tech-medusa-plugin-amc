@@ -252,6 +252,20 @@ const AmcDetail = (props: Props) => {
                   />
                   <Controller
                     control={props.form.control}
+                    name="duration"
+                    rules={{ required: "Duration is required" }}
+                    render={({ field }) => {
+                      return (
+                        <div>
+                          <Label>Duration (in Days)</Label>
+                          <Input autoComplete="off" type="number" {...field} />
+                          <ErrorMessage form={props.form} field={field.name} />
+                        </div>
+                      );
+                    }}
+                  />
+                  <Controller
+                    control={props.form.control}
                     name="barcode"
                     rules={{ required: "Barcode is required" }}
                     render={({ field }) => {
