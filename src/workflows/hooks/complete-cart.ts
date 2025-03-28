@@ -1,7 +1,7 @@
 import { container } from "@medusajs/framework";
 import { MedusaError } from "@medusajs/framework/utils";
 import { completeCartWorkflow } from "@medusajs/medusa/core-flows";
-//TODO:: test pending for customer past order
+
 completeCartWorkflow.hooks.validate(async (context): Promise<void> => {
   const { cart } = context;
 
