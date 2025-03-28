@@ -212,7 +212,7 @@ const AmcDetail = (props: Props) => {
                     render={({ field }) => {
                       return (
                         <div>
-                          <Label>Duration</Label>
+                          <Label>Duration (in Days)</Label>
                           <Input autoComplete="off" type="number" {...field} />
                           <ErrorMessage form={props.form} field={field.name} />
                         </div>
