@@ -81,10 +81,14 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   // 		},
   // 	}
   // );
-
   const amc = await query.graph({
     entity: "amc",
-    fields: ["*", "price_set.prices.*", "product_variants.*"],
+    fields: [
+      "*",
+      "price_set.prices.*",
+      "product_variants.*",
+      "price_set.prices.price_rules.value",
+    ],
   });
 
   res.send(amc);

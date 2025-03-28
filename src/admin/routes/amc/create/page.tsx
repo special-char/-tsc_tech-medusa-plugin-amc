@@ -2,6 +2,7 @@ import AmcDetail from "../../../components/AmcDetail";
 import { useForm } from "react-hook-form";
 import { sdk } from "../../../lib/sdk";
 import { useNavigate } from "react-router-dom";
+import { transformPrices } from "../../../lib/const";
 
 const AmcCreate = () => {
   const form = useForm({
@@ -10,7 +11,6 @@ const AmcCreate = () => {
       sku: "",
       barcode: "",
       variant_id: [],
-      prices: [],
     },
     mode: "onChange",
     reValidateMode: "onChange",
@@ -18,17 +18,18 @@ const AmcCreate = () => {
   });
   const navigate = useNavigate();
   const onSubmit = async (data: any) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
-    const response = await sdk.client.fetch("/admin/amc", {
-      body: data,
+    const reqData = {
+      ...data,
+      prices: await transformPrices(data.prices ?? []),
+    };
+    await sdk.client.fetch("/admin/amc", {
+      body: reqData,
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
     });
     navigate("/amc");
-    // navigate(0);
-    console.log("🚀 ~ onSubmit ~ response:", response);
   };
   return (
     <>
