@@ -1,9 +1,5 @@
 import { HttpTypes } from "@medusajs/framework/types";
-import {
-  Controller,
-  FieldValues,
-  UseFormReturn,
-} from "react-hook-form";
+import { Controller, FieldValues, UseFormReturn } from "react-hook-form";
 import {
   CellContext,
   ColumnDefTemplate,
@@ -14,6 +10,7 @@ import { Input } from "@medusajs/ui";
 import { DataGridColumnType, FieldFunction } from "../types/data-grid-types";
 import { BuildingTax } from "@medusajs/icons";
 import { useMemo } from "react";
+import ErrorMessage from "../components/ErrorMessage";
 
 type DataGridHelperColumnsProps<TData, TFieldValues extends FieldValues> = {
   /**
@@ -91,22 +88,34 @@ const InputCell = ({
 }) => {
   return (
     <div className="flex items-center gap-x-2 p-2 max-w-[130px]">
-      <span className="text-ui-fg-subtle text-sm">
-        {formatter
-          .formatToParts(0)
-          .map((p) => (p.type === "currency" ? p.value : ""))
-          .join("")}
-      </span>
       <div className="relative flex size-full items-center">
         <Controller
           control={form.control}
+          rules={{
+            required: "Price is required",
+          }}
           name={`prices.${name}`}
           render={({ field }) => (
-            <Input
-              {...field}
-              type="number"
-              className="w-full bg-transparent shadow-none outline-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
+            <div className="flex flex-col gap-y-1">
+              <span className="text-ui-fg-subtle flex items-center gap-x-2 text-sm">
+                {formatter
+                  .formatToParts(0)
+                  .map((p) => (p.type === "currency" ? p.value : ""))
+                  .join("")}
+                <Input
+                  {...field}
+                  placeholder="0.00"
+                  type="number"
+                  autoFocus={false}
+                  className={`w-full ${
+                    form.formState.errors[field.name]
+                      ? "border-red-500 border"
+                      : ""
+                  } bg-transparent shadow-none outline-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                />
+              </span>
+              <ErrorMessage form={form} field={field.name} />
+            </div>
           )}
         />
       </div>

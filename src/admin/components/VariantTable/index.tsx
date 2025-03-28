@@ -16,6 +16,7 @@ import { useVariantTableQuery } from "../../hooks/use-variant-table-query";
 import { useQuery } from "@tanstack/react-query";
 import { clx } from "@medusajs/ui";
 import { Photo } from "@medusajs/icons";
+import ErrorMessage from "../ErrorMessage";
 
 type Props = {
   form: UseFormReturn<any, any, undefined>;
@@ -242,6 +243,11 @@ const VariantTable = (props: Props) => {
           </div>
         ) : (
           <>
+            <ErrorMessage
+              className="mx-4"
+              form={props.form}
+              field="variant_id"
+            />
             <DataTable.Table
               emptyState={{
                 empty: {
