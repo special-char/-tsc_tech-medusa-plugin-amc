@@ -1,12 +1,16 @@
 import { HttpTypes } from "@medusajs/framework/types";
-import { FieldPath, FieldValues, UseFormReturn } from "react-hook-form";
+import {
+  Controller,
+  FieldValues,
+  UseFormReturn,
+} from "react-hook-form";
 import {
   CellContext,
   ColumnDefTemplate,
   createColumnHelper,
   HeaderContext,
 } from "@tanstack/react-table";
-import { Button, createDataTableColumnHelper, Input } from "@medusajs/ui";
+import { Input } from "@medusajs/ui";
 import { DataGridColumnType, FieldFunction } from "../types/data-grid-types";
 import { BuildingTax } from "@medusajs/icons";
 import { useMemo } from "react";
@@ -76,6 +80,45 @@ export function createDataGridHelper<TData, TFieldValues>() {
 
 const columnHelper = createDataGridHelper();
 
+const InputCell = ({
+  form,
+  name,
+  formatter,
+}: {
+  form: UseFormReturn<any, any, undefined>;
+  name: string;
+  formatter: Intl.NumberFormat;
+}) => {
+  return (
+    <div className="flex items-center gap-x-2 p-2 max-w-[130px]">
+      <span className="text-ui-fg-subtle text-sm">
+        {formatter
+          .formatToParts(0)
+          .map((p) => (p.type === "currency" ? p.value : ""))
+          .join("")}
+      </span>
+      <div className="relative flex size-full items-center">
+        <Controller
+          control={form.control}
+          name={`prices.${name}`}
+          render={({ field }) => (
+            <Input
+              {...field}
+              type="number"
+              className="w-full bg-transparent shadow-none outline-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            />
+          )}
+        />
+      </div>
+      {/* <Controller
+        control={form.control}
+        name={`prices.${name}`}
+        render={({ field }) => <Input {...field} className="w-full" />}
+      /> */}
+    </div>
+  );
+};
+
 export const useVariantPriceGridColumns = ({
   currencies = [],
   regions = [],
@@ -112,26 +155,18 @@ export const useVariantPriceGridColumns = ({
               </div>
             );
           },
-          cell: (context) => {
+          cell: () => {
             const formatter = new Intl.NumberFormat(undefined, {
               style: "currency",
               currency: currency.toString(),
             });
 
             return (
-              <div className="flex items-center gap-x-2 p-2 w-full">
-                <Input
-                  defaultValue={form.getValues(`prices.${currency}`)}
-                  {...form.register(`prices.${currency}`)}
-                  className="w-full"
-                />
-                <span className="text-ui-fg-subtle text-sm">
-                  {formatter
-                    .formatToParts(0)
-                    .map((p) => (p.type === "currency" ? p.value : ""))
-                    .join("")}
-                </span>
-              </div>
+              <InputCell
+                form={form}
+                name={currency.toString()}
+                formatter={formatter}
+              />
             );
           },
         });
@@ -147,25 +182,13 @@ export const useVariantPriceGridColumns = ({
               </div>
             );
           },
-          cell: (context) => {
+          cell: () => {
             const formatter = new Intl.NumberFormat(undefined, {
               style: "currency",
               currency: region.currency_code,
             });
             return (
-              <div className="flex items-center gap-x-2 p-2 w-full">
-                <Input
-                  {...form.register(`prices.${region.id}`)}
-                  defaultValue={form.getValues(`prices.${region.id}`)}
-                  className="w-full"
-                />
-                <span className="text-ui-fg-subtle text-sm">
-                  {formatter
-                    .formatToParts(0)
-                    .map((p) => (p.type === "currency" ? p.value : ""))
-                    .join("")}
-                </span>
-              </div>
+              <InputCell form={form} name={region.id} formatter={formatter} />
             );
           },
         });

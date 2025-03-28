@@ -7,13 +7,13 @@ type Props = {};
 
 const AmcEdit = (props: Props) => {
   const { state } = useLocation();
-  // console.log("🚀 ~ state:", state);
   const form = useForm({
     defaultValues: {
       title: state.title,
       sku: state.sku,
       barcode: state.barcode,
       prices: reverseTransformPrices(state?.price_set?.prices ?? []),
+      duration: state.duration,
       variant_id: state.product_variants.map((v: any) => v.id),
     },
     mode: "onChange",

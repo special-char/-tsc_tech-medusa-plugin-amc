@@ -11,6 +11,7 @@ const AmcCreate = () => {
       sku: "",
       barcode: "",
       variant_id: [],
+      duration: null,
     },
     mode: "onChange",
     reValidateMode: "onChange",
