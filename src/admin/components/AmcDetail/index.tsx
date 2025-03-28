@@ -52,7 +52,12 @@ const AmcDetail = (props: Props) => {
 
     // For other tabs, validate required fields
     if (tab === AmcCreateTab.AMC_PRODUCTS) {
-      const valid = await props.form.trigger(["title", "sku", "barcode"]);
+      const valid = await props.form.trigger([
+        "title",
+        "sku",
+        "barcode",
+        "duration",
+      ]);
       if (!valid) {
         return;
       }
@@ -68,19 +73,23 @@ const AmcDetail = (props: Props) => {
     }
 
     if (tab === AmcCreateTab.AMC_PRICE) {
-      const variant = props.form.watch("variants");
+      const variant = props.form.watch("variant_id");
 
-      const valid = await props.form.trigger([
-        "title",
-        "sku",
-        "barcode",
-        // "variants",
-      ]);
-      // &&
-      // Array.isArray(variant) &&
-      // variant.length > 0;
+      const valid =
+        (await props.form.trigger([
+          "title",
+          "sku",
+          "barcode",
+          "variant_id",
+          "duration",
+        ])) &&
+        Array.isArray(variant) &&
+        variant.length > 0;
 
       if (!valid) {
+        props.form.setError("variant_id", {
+          message: "Please select a variant",
+        });
         return;
       }
 
@@ -99,27 +108,36 @@ const AmcDetail = (props: Props) => {
     switch (tab) {
       case AmcCreateTab.AMC_DETAILS: {
         // Validate region before continuing
-        const valid = await props.form.trigger(["title", "sku", "barcode"]);
+        const valid = await props.form.trigger([
+          "title",
+          "sku",
+          "barcode",
+          "duration",
+        ]);
         if (valid) {
           handleTabChange(AmcCreateTab.AMC_PRODUCTS);
         }
         break;
       }
       case AmcCreateTab.AMC_PRODUCTS: {
-        const variant = props.form.watch("variants");
-        const valid = await props.form.trigger([
-          "title",
-          "sku",
-          "barcode",
-          // "variants",
-        ]);
-        // &&
-        // Array.isArray(variant) &&
-        // variant.length > 0;
+        const variant = props.form.watch("variant_id");
+
+        const valid =
+          (await props.form.trigger([
+            "title",
+            "sku",
+            "barcode",
+            "variant_id",
+          ])) &&
+          Array.isArray(variant) &&
+          variant.length > 0;
 
         if (valid) {
           handleTabChange(AmcCreateTab.AMC_PRICE);
         }
+        props.form.setError("variant_id", {
+          message: "Please select a variant",
+        });
         break;
       }
       case AmcCreateTab.AMC_PRICE:
@@ -184,7 +202,11 @@ const AmcDetail = (props: Props) => {
                     return (
                       <div>
                         <Label>Title</Label>
-                        <Input className="m-0 gap-0" {...field} />
+                        <Input
+                          className="m-0 gap-0"
+                          placeholder="AMC 1"
+                          {...field}
+                        />
                         <ErrorMessage form={props.form} field={field.name} />
                       </div>
                     );
@@ -199,7 +221,30 @@ const AmcDetail = (props: Props) => {
                       return (
                         <div>
                           <Label>SKU</Label>
-                          <Input autoComplete="off" {...field} />
+                          <Input
+                            autoComplete="off"
+                            placeholder="t-shirt-black"
+                            {...field}
+                          />
+                          <ErrorMessage form={props.form} field={field.name} />
+                        </div>
+                      );
+                    }}
+                  />
+                  <Controller
+                    control={props.form.control}
+                    name="duration"
+                    rules={{ required: "Duration is required" }}
+                    render={({ field }) => {
+                      return (
+                        <div>
+                          <Label>Duration (in Days)</Label>
+                          <Input
+                            autoComplete="off"
+                            type="number"
+                            placeholder="365"
+                            {...field}
+                          />
                           <ErrorMessage form={props.form} field={field.name} />
                         </div>
                       );
@@ -227,7 +272,11 @@ const AmcDetail = (props: Props) => {
                       return (
                         <div>
                           <Label>Barcode</Label>
-                          <Input autoComplete="off" {...field} />
+                          <Input
+                            autoComplete="off"
+                            placeholder="AD21M2JAK"
+                            {...field}
+                          />
                           <ErrorMessage form={props.form} field={field.name} />
                         </div>
                       );
@@ -238,9 +287,9 @@ const AmcDetail = (props: Props) => {
             </ProgressTabs.Content>
 
             <ProgressTabs.Content value={AmcCreateTab.AMC_PRODUCTS}>
-              <Container>
-                <VariantTable form={props.form} />
-              </Container>
+              <VariantTable form={props.form} />
+              {/* <Container>
+              </Container> */}
             </ProgressTabs.Content>
 
             <ProgressTabs.Content value={AmcCreateTab.AMC_PRICE}>
@@ -266,7 +315,7 @@ const AmcDetail = (props: Props) => {
                 props.form.formState.isSubmitting ? (
                   <Spinner className="animate-spin" />
                 ) : (
-                  "Create Order"
+                  "Create AMC"
                 )
               ) : (
                 "Continue"
