@@ -82,28 +82,8 @@ const useRegions = () => {
 };
 
 const VariantPricingForm = (props: Props) => {
-  const { searchParams: variantSearchParams } = useVariantTableQuery({
-    pageSize: VARIANT_PAGE_SIZE,
-    prefix: VARIANT_PREFIX,
-  });
   const { data: regions } = useRegions();
-  const { data: pricePreferences } = usePricePreferences();
-  const { data: variants, isLoading } = useQuery<{
-    variants: [];
-    count: number;
-    limit: number;
-    offset: number;
-  }>({
-    queryFn: () =>
-      sdk.client.fetch(`/admin/product-variants`, {
-        headers: {},
-        query: {
-          ...variantSearchParams,
-        },
-      }),
-    queryKey: ["product-variants"],
-    staleTime: 30000,
-  });
+
   const priceColumns = useVariantPriceGridColumns({
     currencies: regions?.regions?.map((r) => r.currency_code),
     regions: regions?.regions,
@@ -116,7 +96,6 @@ const VariantPricingForm = (props: Props) => {
         title: props.form.getValues("title"),
         sku: props.form.getValues("sku"),
         barcode: props.form.getValues("barcode"),
-        price: 100,
       },
     ],
   });
@@ -128,21 +107,15 @@ const VariantPricingForm = (props: Props) => {
           <Heading>Amc Pricing</Heading>
           <Button size="small" variant="secondary" asChild></Button>
         </DataTable.Toolbar>
-        {isLoading ? (
-          <div className="flex items-center justify-center h-[251px]">
-            <Spinner className="animate-spin text-ui-fg-subtle" />
-          </div>
-        ) : (
-          <>
-            <DataTable.Table
-              emptyState={{
-                empty: {
-                  heading: "No variants available",
-                },
-              }}
-            />
-          </>
-        )}
+        <>
+          <DataTable.Table
+            emptyState={{
+              empty: {
+                heading: "No variants available",
+              },
+            }}
+          />
+        </>
       </DataTable>
     </div>
   );

@@ -26,135 +26,94 @@ const VARIANT_PREFIX = "variant";
 const columnHelper = createDataTableColumnHelper<any>();
 const columns = (props: Props) => [
   columnHelper.select({
-    ...(true
-      ? {
-          header: ({ table }) => {
-            const currentVariants = props.form.getValues("variants") || [];
-            console.log({ currentVariants });
+    header: ({ table }) => {
+      const currentVariants = props.form.getValues("variant_id") || [];
+      return (
+        <Controller
+          control={props.form.control}
+          name="variant_id"
+          render={({ field }) => {
+            // Get the actual rows on the current page
+            const currentPageRows = table.getRowModel().rows;
+            // Get all visible variant IDs from current page using actual rows
+            const visibleVariantIds = currentPageRows
+              .map((row) => row.original?.id)
+              .filter(Boolean);
+
+            // Check if all visible variants are selected
+            const allVisibleSelected = visibleVariantIds.every((id) =>
+              currentVariants.includes(id)
+            );
+            // Check if some (but not all) visible variants are selected
+            const someVisibleSelected = visibleVariantIds.some((id) =>
+              currentVariants.includes(id)
+            );
+
+            // Determine checkbox state
+            let checkboxState: CheckboxCheckedState = false;
+            if (allVisibleSelected && visibleVariantIds.length > 0) {
+              checkboxState = true;
+            } else if (someVisibleSelected) {
+              checkboxState = "indeterminate";
+            }
+
             return (
-              <Controller
-                control={props.form.control}
-                name="variants"
-                render={({ field }) => {
-                  // Get the actual rows on the current page
-                  const currentPageRows = table.getRowModel().rows;
-                  console.log({ currentPageRows });
-                  // Get all visible variant IDs from current page using actual rows
-                  const visibleVariantIds = currentPageRows
-                    .map((row) => row.original?.id)
-                    .filter(Boolean);
-
-                  console.log({ visibleVariantIds });
-                  // Check if all visible variants are selected
-                  const allVisibleSelected = visibleVariantIds.every((id) =>
-                    currentVariants.includes(id)
-                  );
-                  console.log({ allVisibleSelected });
-                  // Check if some (but not all) visible variants are selected
-                  const someVisibleSelected = visibleVariantIds.some((id) =>
-                    currentVariants.includes(id)
-                  );
-                  console.log({ someVisibleSelected });
-
-                  // Determine checkbox state
-                  let checkboxState: CheckboxCheckedState = false;
-                  if (allVisibleSelected && visibleVariantIds.length > 0) {
-                    checkboxState = true;
-                  } else if (someVisibleSelected) {
-                    checkboxState = "indeterminate";
+              <Checkbox
+                checked={checkboxState}
+                onCheckedChange={(value) => {
+                  if (value) {
+                    // If checking, add all visible variants
+                    const uniqueVariants = [
+                      ...new Set([...currentVariants, ...visibleVariantIds]),
+                    ];
+                    field.onChange(uniqueVariants);
+                  } else {
+                    // If unchecking, remove all visible variants
+                    const remainingVariants = currentVariants.filter(
+                      (id: string) => !visibleVariantIds.includes(id)
+                    );
+                    field.onChange(remainingVariants);
                   }
-
-                  return (
-                    <Checkbox
-                      checked={checkboxState}
-                      onCheckedChange={(value) => {
-                        if (value) {
-                          // If checking, add all visible variants
-                          const uniqueVariants = [
-                            ...new Set([
-                              ...currentVariants,
-                              ...visibleVariantIds,
-                            ]),
-                          ];
-                          field.onChange(uniqueVariants);
-                        } else {
-                          // If unchecking, remove all visible variants
-                          const remainingVariants = currentVariants.filter(
-                            (id: string) => !visibleVariantIds.includes(id)
-                          );
-                          field.onChange(remainingVariants);
-                        }
-                      }}
-                    />
-                  );
                 }}
               />
             );
-          },
-          cell: ({ row }) => {
-            const variants = props.form.watch("variants") || [];
-            const isSelected = variants.some((v: any) => v === row.original.id);
-            return (
-              <Controller
-                control={props.form.control}
-                name="variants"
-                render={({ field }) => (
-                  <Checkbox
-                    checked={isSelected}
-                    onClick={(e) => e.stopPropagation()}
-                    onCheckedChange={useCallback(
-                      (checked: CheckboxCheckedState) => {
-                        const currentVariants =
-                          props.form.getValues("variants") || [];
-                        if (checked) {
-                          // Update form state first
-                          field.onChange([...currentVariants, row.original.id]);
-                          // Then update row selection
-                          // row.toggleSelected(true);
-                        } else {
-                          // Update form state first
-                          field.onChange(
-                            currentVariants.filter(
-                              (v: any) => v !== row.original.id
-                            )
-                          );
-                          // Then update row selection
-                          // row.toggleSelected(false);
-                        }
-                      },
-                      []
-                    )}
-                  />
-                )}
-              />
-            );
-          },
-        }
-      : {
-          header: ({ table }) => (
+          }}
+        />
+      );
+    },
+    cell: ({ row }) => {
+      const variants = props.form.watch("variant_id") || [];
+      const isSelected = variants.some((v: any) => v === row.original.id);
+      return (
+        <Controller
+          control={props.form.control}
+          name="variant_id"
+          render={({ field }) => (
             <Checkbox
-              checked={
-                table.getIsAllRowsSelected()
-                  ? true
-                  : table.getIsSomeRowsSelected()
-                  ? "indeterminate"
-                  : false
-              }
-              onCheckedChange={(value) => {
-                table.toggleAllRowsSelected(!!value);
-              }}
+              checked={isSelected}
+              onClick={(e) => e.stopPropagation()}
+              onCheckedChange={useCallback((checked: CheckboxCheckedState) => {
+                const currentVariants =
+                  props.form.getValues("variant_id") || [];
+                if (checked) {
+                  // Update form state first
+                  field.onChange([...currentVariants, row.original.id]);
+                  // Then update row selection
+                  // row.toggleSelected(true);
+                } else {
+                  // Update form state first
+                  field.onChange(
+                    currentVariants.filter((v: any) => v !== row.original.id)
+                  );
+                  // Then update row selection
+                  // row.toggleSelected(false);
+                }
+              }, [])}
             />
-          ),
-          cell: ({ row }) => (
-            <Checkbox
-              checked={row.getIsSelected()}
-              onCheckedChange={(value) => row.toggleSelected(!!value)}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            />
-          ),
-        }),
+          )}
+        />
+      );
+    },
   }),
   columnHelper.accessor("title", {
     header: () => <span>Variant</span>,

@@ -121,6 +121,7 @@ export const useVariantPriceGridColumns = ({
             return (
               <div className="flex items-center gap-x-2 p-2 w-full">
                 <Input
+                  defaultValue={form.getValues(`prices.${currency}`)}
                   {...form.register(`prices.${currency}`)}
                   className="w-full"
                 />
@@ -151,11 +152,11 @@ export const useVariantPriceGridColumns = ({
               style: "currency",
               currency: region.currency_code,
             });
-
             return (
               <div className="flex items-center gap-x-2 p-2 w-full">
                 <Input
                   {...form.register(`prices.${region.id}`)}
+                  defaultValue={form.getValues(`prices.${region.id}`)}
                   className="w-full"
                 />
                 <span className="text-ui-fg-subtle text-sm">

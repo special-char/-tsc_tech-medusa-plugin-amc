@@ -41,12 +41,12 @@ export const POST = async (
 
   const existingVariant =
     linkData.data[0].product_variants?.map((v) => v?.id) || [];
-  const priceSetId = linkData.data[0].price_set?.id;
-  const newVariant = variant_id.filter((v) => !existingVariant.includes(v));
-  const deleteVariant = existingVariant.filter((v) => !variant_id.includes(v));
+  const priceSetId = linkData.data[0]?.price_set?.id;
+  const newVariant = variant_id?.filter((v) => !existingVariant.includes(v));
+  const deleteVariant = existingVariant?.filter((v) => !variant_id.includes(v));
 
   const links: LinkDefinition[] = [];
-  newVariant.map((v_id: string) =>
+  newVariant?.map((v_id: string) =>
     links.push({
       [AMC_MODULE]: {
         amc_id: amc.id,
@@ -59,7 +59,7 @@ export const POST = async (
 
   await remoteLink.create(links);
 
-  deleteVariant.map((v_id: string) =>
+  deleteVariant?.map((v_id: string) =>
     remoteLink.dismiss({
       [AMC_MODULE]: {
         amc_id: amc.id,
@@ -69,12 +69,13 @@ export const POST = async (
       },
     })
   );
-
-  await updateProductAMCWorkflow(req.scope).run({
-    input: {
-      price_sets: [{ id: priceSetId, prices }],
-    },
-  });
+  if (priceSetId) {
+    await updateProductAMCWorkflow(req.scope).run({
+      input: {
+        price_sets: [{ id: priceSetId, prices }],
+      },
+    });
+  }
 
   const amcData = await query.graph({
     entity: "amc",
