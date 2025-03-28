@@ -83,9 +83,11 @@ const useRegions = () => {
 
 const VariantPricingForm = (props: Props) => {
   const { data: regions } = useRegions();
-
+  const currencies = [
+    ...new Set(regions?.regions?.map((r) => r.currency_code)),
+  ];
   const priceColumns = useVariantPriceGridColumns({
-    currencies: regions?.regions?.map((r) => r.currency_code),
+    currencies,
     regions: regions?.regions,
     form: props.form,
   });

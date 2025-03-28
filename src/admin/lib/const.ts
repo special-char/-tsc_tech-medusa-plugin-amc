@@ -4,7 +4,7 @@ export const transformPrices = async (prices: { [key: string]: string }) => {
   const result = [] as any[];
   for (const [key, amount] of Object.entries(prices)) {
     const regionToCurrencyMap = {} as Record<string, string>;
-    if (amount.trim() && !isNaN(parseInt(amount))) {
+    if (amount && !isNaN(parseInt(amount))) {
       if (key.startsWith("reg_")) {
         const region = await sdk.admin.region.retrieve(key);
         regionToCurrencyMap[key] = region.region.currency_code;
