@@ -38,37 +38,41 @@ export const POST = async (
       id: req.params.id,
     },
   });
+  if (variant_id) {
+    const existingVariant =
+      linkData.data[0].product_variants?.map((v) => v?.id) || [];
 
-  const existingVariant =
-    linkData.data[0].product_variants?.map((v) => v?.id) || [];
+    const newVariant = variant_id.filter((v) => !existingVariant.includes(v));
+    const deleteVariant = existingVariant.filter(
+      (v) => !variant_id.includes(v)
+    );
+
+    const links: LinkDefinition[] = [];
+    newVariant?.map((v_id: string) =>
+      links.push({
+        [AMC_MODULE]: {
+          amc_id: amc.id,
+        },
+        [Modules.PRODUCT]: {
+          product_variant_id: v_id,
+        },
+      })
+    );
+
+    await remoteLink.create(links);
+
+    deleteVariant?.map((v_id: string) =>
+      remoteLink.dismiss({
+        [AMC_MODULE]: {
+          amc_id: amc.id,
+        },
+        [Modules.PRODUCT]: {
+          product_variant_id: v_id,
+        },
+      })
+    );
+  }
   const priceSetId = linkData.data[0]?.price_set?.id;
-  const newVariant = variant_id?.filter((v) => !existingVariant.includes(v));
-  const deleteVariant = existingVariant?.filter((v) => !variant_id.includes(v));
-
-  const links: LinkDefinition[] = [];
-  newVariant?.map((v_id: string) =>
-    links.push({
-      [AMC_MODULE]: {
-        amc_id: amc.id,
-      },
-      [Modules.PRODUCT]: {
-        product_variant_id: v_id,
-      },
-    })
-  );
-
-  await remoteLink.create(links);
-
-  deleteVariant?.map((v_id: string) =>
-    remoteLink.dismiss({
-      [AMC_MODULE]: {
-        amc_id: amc.id,
-      },
-      [Modules.PRODUCT]: {
-        product_variant_id: v_id,
-      },
-    })
-  );
   if (priceSetId) {
     await updateProductAMCWorkflow(req.scope).run({
       input: {

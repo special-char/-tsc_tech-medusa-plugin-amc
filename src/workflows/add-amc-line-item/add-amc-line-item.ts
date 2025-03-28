@@ -204,7 +204,7 @@ export const addAMCToCartWorkflow = createWorkflow(
           isCustomPrice: isDefined(
             item?.price_set?.calculated_price?.calculated_amount
           ),
-          metadata: data.input.metadata,
+          metadata: data.input.items[0].metadata,
           quantity: data.input.quantity,
         };
 
