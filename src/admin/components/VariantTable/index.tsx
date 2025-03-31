@@ -23,7 +23,7 @@ type Props = {
 };
 
 const VARIANT_PAGE_SIZE = 10;
-const VARIANT_PREFIX = "variant";
+// const VARIANT_PREFIX = "variant";
 const columnHelper = createDataTableColumnHelper<any>();
 const columns = (props: Props) => [
   columnHelper.select({
@@ -154,10 +154,10 @@ const columns = (props: Props) => [
 const VariantTable = (props: Props) => {
   const [pageIndex, setPageIndex] = useState(0);
 
-  const { searchParams: variantSearchParams } = useVariantTableQuery({
-    pageSize: VARIANT_PAGE_SIZE,
-    prefix: VARIANT_PREFIX,
-  });
+  // const { searchParams: variantSearchParams } = useVariantTableQuery({
+  //   pageSize: VARIANT_PAGE_SIZE,
+  //   prefix: VARIANT_PREFIX,
+  // });
 
   const [searchValue, setSearchValue] = useState("");
   const { data: variants, isLoading } = useQuery<{
@@ -170,7 +170,7 @@ const VariantTable = (props: Props) => {
       sdk.client.fetch(`/admin/product-variants`, {
         headers: {},
         query: {
-          ...variantSearchParams,
+          // ...variantSearchParams,
           offset: pageIndex * VARIANT_PAGE_SIZE,
           limit: VARIANT_PAGE_SIZE,
           q: searchValue || undefined,

@@ -68,17 +68,6 @@ export const POST = async (
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const query = req.scope.resolve("query");
-  // const pricingModuleService = req.scope.resolve(Modules.PRICING);
-
-  // const price = await pricingModuleService.calculatePrices(
-  // 	{ id: ["pset_01JPW13SDMWTAKPNZGZ81P6D0X"] },
-  // 	{
-  // 		context: {
-  // 			region_id: "reg_01JPS2W34ZSHSHX6GXASGG6DV5",
-  // 			currency_code: "eur",
-  // 		},
-  // 	}
-  // );
   const amc = await query.graph({
     entity: "amc",
     fields: [
@@ -88,6 +77,5 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
       "price_set.prices.price_rules.value",
     ],
   });
-
   res.send(amc);
 };
