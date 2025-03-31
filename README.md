@@ -30,6 +30,7 @@
 ## ✨ Features
 
 ### 🎯 Core Capabilities
+
 - 📝 Create & manage maintenance contracts
 - 🔄 Automated contract lifecycle management
 - 💳 Flexible pricing & billing
@@ -37,12 +38,14 @@
 - 🔔 Smart notifications system
 
 ### 🚀 For Your Business
+
 - 📈 Increase recurring revenue
 - 🤝 Improve customer retention
 - ⚡ Automate maintenance scheduling
 - 📱 Enhanced customer experience
 
 ### 💪 For Your Customers
+
 - 🛡️ Guaranteed maintenance support
 - ⏰ Priority service response
 - 💰 Predictable maintenance costs
@@ -71,10 +74,10 @@ module.exports = {
       resolve: "@tsc_tech/medusa-plugin-amc",
       options: {
         // plugin options (if any)
-      }
-    }
-  ]
-}
+      },
+    },
+  ],
+};
 ```
 
 ### 🔥 Initialize
@@ -88,6 +91,7 @@ npx medusa db:migrate
 ## 💡 Key Features Explained
 
 ### 1. 📋 Contract Management
+
 - Create customized AMC plans
 - Set flexible durations
 - Track contract status
@@ -97,6 +101,7 @@ npx medusa db:migrate
 #### AMC API Endpoints
 
 1. **List All AMCs**
+
 ```bash
 # Using curl
 curl -X GET "http://localhost:9000/store/amc?limit=50&offset=0" \
@@ -105,11 +110,14 @@ curl -X GET "http://localhost:9000/store/amc?limit=50&offset=0" \
 # Direct endpoint
 GET /store/amc
 ```
+
 Query Parameters:
+
 - `limit`: Number of items to return (default: 50)
 - `offset`: Number of items to skip (default: 0)
 
 Response:
+
 ```json
 {
   "amc": [...],
@@ -120,6 +128,7 @@ Response:
 ```
 
 2. **Get AMC by Variant ID**
+
 ```bash
 # Using curl
 curl -X GET "http://localhost:9000/store/amc/variant_123" \
@@ -128,7 +137,9 @@ curl -X GET "http://localhost:9000/store/amc/variant_123" \
 # Direct endpoint
 GET /store/amc/{variantId}
 ```
+
 Response:
+
 ```json
 {
   "amc": [...],
@@ -139,6 +150,7 @@ Response:
 ```
 
 3. **Add AMC to Cart Line Item**
+
 ```bash
 # Using curl
 curl -X POST "http://localhost:9000/store/add-amc-to-cart-line-item" \
@@ -154,7 +166,9 @@ curl -X POST "http://localhost:9000/store/add-amc-to-cart-line-item" \
 # Direct endpoint
 POST /store/add-amc-to-cart-line-item
 ```
+
 Request Body:
+
 ```json
 {
   "cart_id": "cart_123",
@@ -165,14 +179,76 @@ Request Body:
 }
 ```
 
+3. **Get Customer Warranties**
+
+```bash
+# Using curl
+curl --location 'http://localhost:9010/store/customer-warranties?variant_id=variant_01JQ950S0REDQXND3CKZ3TF7S0&order_line_item_id=ordli_01JQEAND0D686JR9VH8JRZN6Z6' \
+--header 'x-publishable-api-key: pk_d9c2ca70a32a0c54f653ffae0ec658280971c14853b291c0765e5636a7203fa5' \
+--header 'Authorization: Bearer <your_token>'
+```
+
+Query Parameters:
+
+- `variant_id`: The ID of the product variant.
+- `order_line_item_id`: The ID of the order line item.
+
+Headers:
+
+- `x-publishable-api-key`: Your publishable API key.
+- `Authorization`: Bearer token for authentication.
+
+Response:
+
+```json
+[
+  {
+    "customer_id": "cus_01JQE8KZAP1HPBHBENH7PDW82W",
+    "variant_id": "variant_01JQ950S0REDQXND3CKZ3TF7S0",
+    "order_line_item_id": "ordli_01JQEAND0D686JR9VH8JRZN6Z6",
+    "start_date": "2025-03-28T12:12:09.704Z",
+    "end_date": "2025-04-27T12:12:09.704Z",
+    "isWarrantyAvailable": true,
+    "details": [
+      {
+        "start_date": "2025-03-28T12:12:09.704Z",
+        "end_date": "2025-04-27T12:12:09.704Z",
+        "id": "warranty_01JQEAND38DS3ST8D52ER6JBT3",
+        "duration_days": 30,
+        "order_id": "order_01JQEAND0CQ1FF2A18ETRSZZQ4",
+        "product_id": "prod_01JQ950RZM7JTSEPZ4C4ED3DGE",
+        "amc_id": "",
+        "created_at": "2025-03-28T12:12:09.704Z",
+        "updated_at": "2025-03-28T12:12:09.704Z",
+        "deleted_at": null
+      },
+      {
+        "start_date": "2025-04-27T12:12:09.704Z",
+        "end_date": "2026-04-27T12:12:09.704Z",
+        "id": "warranty_01JQEAPTAVQVX4ABNW10FPX12S",
+        "duration_days": 365,
+        "order_id": "order_01JQEAPT8BPP426K972GPAG76S",
+        "product_id": "prod_01JQ950RZM7JTSEPZ4C4ED3DGE",
+        "amc_id": "amc_01JQE1QGY8VF5GTZQFBRYQW99J",
+        "created_at": "2025-03-28T12:12:56.027Z",
+        "updated_at": "2025-03-28T12:12:56.027Z",
+        "deleted_at": null
+      }
+    ]
+  }
+]
+```
+
 ## 🎯 Use Cases
 
 ### 🏢 Enterprise Equipment
+
 - Industrial machinery
 - Office equipment
 - IT infrastructure
 
 ### 🏠 Consumer Products
+
 - Home appliances
 - Electronics
 - Smart devices
@@ -182,6 +258,7 @@ Request Body:
 ## 🤝 Support & Community
 
 ### 💬 Get Help
+
 - [Discord Community](https://discord.gg/medusajs)
 - [GitHub Discussions](https://github.com/medusajs/medusa/discussions)
 - [Documentation](https://docs.medusajs.com)
@@ -191,10 +268,12 @@ Request Body:
 To manage AMCs through the Medusa Admin Dashboard:
 
 1. **Create AMC**
+
    - Navigate to: `/admin/amc/create`
    - Fill in the AMC details in the provided form
 
 2. **View & Edit AMCs**
+
    - Navigate to: `/admin/amc`
    - List of all AMCs
    - Click on any AMC to edit at: `/admin/amc/edit`
