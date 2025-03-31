@@ -37,7 +37,7 @@ const AmcEdit = (props: Props) => {
   };
   return (
     <>
-      <AmcDetail form={form} onSubmit={onSubmit} />
+      <AmcDetail form={form} amcId={state.id} onSubmit={onSubmit} />
     </>
   );
 };

@@ -148,8 +148,6 @@ export default async function order1PlacedHandler({
 
     lastEndDate = endDate; // Update lastEndDate to chain AMCs
   }
-
-  console.log("end");
 }
 
 export const config: SubscriberConfig = {

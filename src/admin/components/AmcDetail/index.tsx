@@ -4,7 +4,6 @@ import { KeyboundForm } from "../common/keybound-form";
 
 import {
   Button,
-  Container,
   Input,
   Label,
   ProgressStatus,
@@ -19,6 +18,7 @@ import VariantTable from "../VariantTable";
 type Props = {
   form: UseFormReturn<any, any, undefined>;
   onSubmit: (data: any) => void;
+  amcId?: string;
 };
 
 export enum AmcCreateTab {
@@ -300,6 +300,8 @@ const AmcDetail = (props: Props) => {
               {tab === AmcCreateTab.AMC_PRICE ? (
                 props.form.formState.isSubmitting ? (
                   <Spinner className="animate-spin" />
+                ) : props.amcId ? (
+                  "Update AMC"
                 ) : (
                   "Create AMC"
                 )
