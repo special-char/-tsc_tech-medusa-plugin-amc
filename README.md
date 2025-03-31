@@ -184,7 +184,7 @@ Request Body:
 ```bash
 # Using curl
 curl --location 'http://localhost:9010/store/customer-warranties?variant_id=variant_01JQ950S0REDQXND3CKZ3TF7S0&order_line_item_id=ordli_01JQEAND0D686JR9VH8JRZN6Z6' \
---header 'x-publishable-api-key: pk_d9c2ca70a32a0c54f653ffae0ec658280971c14853b291c0765e5636a7203fa5' \
+--header 'x-publishable-api-key: <your_publishable_api_key>' \
 --header 'Authorization: Bearer <your_token>'
 ```
 
@@ -203,9 +203,9 @@ Response:
 ```json
 [
   {
-    "customer_id": "cus_01JQE8KZAP1HPBHBENH7PDW82W",
-    "variant_id": "variant_01JQ950S0REDQXND3CKZ3TF7S0",
-    "order_line_item_id": "ordli_01JQEAND0D686JR9VH8JRZN6Z6",
+    "customer_id": "cus_01234567890",
+    "variant_id": "variant_01234567890",
+    "order_line_item_id": "ordli_01234567890",
     "start_date": "2025-03-28T12:12:09.704Z",
     "end_date": "2025-04-27T12:12:09.704Z",
     "isWarrantyAvailable": true,
@@ -213,10 +213,10 @@ Response:
       {
         "start_date": "2025-03-28T12:12:09.704Z",
         "end_date": "2025-04-27T12:12:09.704Z",
-        "id": "warranty_01JQEAND38DS3ST8D52ER6JBT3",
+        "id": "warranty_01234567890",
         "duration_days": 30,
-        "order_id": "order_01JQEAND0CQ1FF2A18ETRSZZQ4",
-        "product_id": "prod_01JQ950RZM7JTSEPZ4C4ED3DGE",
+        "order_id": "order_01234567890",
+        "product_id": "prod_01234567890",
         "amc_id": "",
         "created_at": "2025-03-28T12:12:09.704Z",
         "updated_at": "2025-03-28T12:12:09.704Z",
@@ -225,11 +225,11 @@ Response:
       {
         "start_date": "2025-04-27T12:12:09.704Z",
         "end_date": "2026-04-27T12:12:09.704Z",
-        "id": "warranty_01JQEAPTAVQVX4ABNW10FPX12S",
+        "id": "warranty_09876543210",
         "duration_days": 365,
-        "order_id": "order_01JQEAPT8BPP426K972GPAG76S",
-        "product_id": "prod_01JQ950RZM7JTSEPZ4C4ED3DGE",
-        "amc_id": "amc_01JQE1QGY8VF5GTZQFBRYQW99J",
+        "order_id": "order_09876543210",
+        "product_id": "prod_01234567890",
+        "amc_id": "amc_01234567890",
         "created_at": "2025-03-28T12:12:56.027Z",
         "updated_at": "2025-03-28T12:12:56.027Z",
         "deleted_at": null
@@ -238,48 +238,3 @@ Response:
   }
 ]
 ```
-
-## 🎯 Use Cases
-
-### 🏢 Enterprise Equipment
-
-- Industrial machinery
-- Office equipment
-- IT infrastructure
-
-### 🏠 Consumer Products
-
-- Home appliances
-- Electronics
-- Smart devices
-
----
-
-## 🤝 Support & Community
-
-### 💬 Get Help
-
-- [Discord Community](https://discord.gg/medusajs)
-- [GitHub Discussions](https://github.com/medusajs/medusa/discussions)
-- [Documentation](https://docs.medusajs.com)
-
-### 🎮 Admin UI Navigation
-
-To manage AMCs through the Medusa Admin Dashboard:
-
-1. **Create AMC**
-
-   - Navigate to: `/admin/amc/create`
-   - Fill in the AMC details in the provided form
-
-2. **View & Edit AMCs**
-
-   - Navigate to: `/admin/amc`
-   - List of all AMCs
-   - Click on any AMC to edit at: `/admin/amc/edit`
-
-3. **View AMCs**
-   - Navigate to: `/admin/amc`
-   - List of all AMCs
-
----
