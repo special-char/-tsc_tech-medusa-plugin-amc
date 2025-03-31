@@ -21,21 +21,26 @@ export default async function productCreateHandler({
     if (!p.data[0]) {
       throw new Error(`Product not found for ID: ${data.id}`);
     }
-    const warrantyModuleService: WarrantyModuleService =
-      container.resolve(WARRANTY_MODULE);
-    const warranty = await warrantyModuleService.deleteProductWarrantyTerms(
+    if (
+      p.data[0].product_warranty_terms &&
       p.data[0].product_warranty_terms.id
-    );
+    ) {
+      const warrantyModuleService: WarrantyModuleService =
+        container.resolve(WARRANTY_MODULE);
+      const warranty = await warrantyModuleService.deleteProductWarrantyTerms(
+        p.data[0].product_warranty_terms.id
+      );
 
-    const remoteLink = container.resolve("remoteLink");
-    await remoteLink.delete({
-      [Modules.PRODUCT]: {
-        product_variant_id: p.data[0].id,
-      },
-      [WARRANTY_MODULE]: {
-        product_warranty_terms_id: p.data[0].product_warranty_terms.id,
-      },
-    });
+      const remoteLink = container.resolve("remoteLink");
+      await remoteLink.delete({
+        [Modules.PRODUCT]: {
+          product_variant_id: p.data[0].id,
+        },
+        [WARRANTY_MODULE]: {
+          product_warranty_terms_id: p.data[0].product_warranty_terms.id,
+        },
+      });
+    }
   } catch (error) {
     console.error(`Error handling product deletion for ID ${data.id}:`, error);
   }

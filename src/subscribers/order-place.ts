@@ -52,6 +52,7 @@ export default async function order1PlacedHandler({
             duration,
             type,
             itemId: item.id,
+            productId: item.product_id,
           });
         }
       }
@@ -76,6 +77,7 @@ export default async function order1PlacedHandler({
             type,
             itemId: item?.metadata?.order_line_item_id,
             orderLineItemId: item?.metadata?.order_line_item_id,
+            productId: item.product_id,
           });
         }
       }
@@ -95,7 +97,7 @@ export default async function order1PlacedHandler({
       duration_days: warranty.duration,
       order_id: order[0].id,
       variant_id: warranty.variantId,
-      product_id: "",
+      product_id: warranty.productId,
       customer_id: customerId,
       amc_id: "",
       order_line_item_id: warranty.itemId,
@@ -140,7 +142,7 @@ export default async function order1PlacedHandler({
       duration_days: amc.duration,
       order_id: order[0].id,
       variant_id: amc.variantId || "",
-      product_id: "",
+      product_id: amc.productId,
       customer_id: customerId,
       amc_id: amc.amcId,
       order_line_item_id: amc.itemId,

@@ -132,7 +132,7 @@ export function prepareLineItemData(data: any) {
     is_discountable:
       variant?.product_variants[0].product?.discountable ??
       item?.is_discountable,
-    requires_shipping: requiresShipping,
+    requires_shipping: false,
 
     unit_price: unitPrice,
     compare_at_unit_price: compareAtUnitPrice,
