@@ -11,11 +11,11 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AmcProps, AmcRowActions } from "../../components/TableRowActions";
 import { sdk } from "../../lib/sdk";
-// import { sdk } from "../../lib/client";
+import { format } from "date-fns";
 
 const columnHelper = createDataTableColumnHelper();
 
-const columns = [
+const columns = (editBtn?: ({ state }: { state: any }) => React.ReactNode) => [
   columnHelper.accessor("title", {
     header: "Title",
   }),
@@ -28,27 +28,44 @@ const columns = [
   }),
   columnHelper.accessor("created_at", {
     header: "Created At",
+    cell: ({ row }) => {
+      return <div>{format(row.original?.created_at, "dd/MM/yyyy")}</div>;
+    },
   }),
   columnHelper.accessor("updated_at", {
     header: "Updated At",
+    cell: ({ row }) => {
+      return <div>{format(row.original?.updated_at, "dd/MM/yyyy")}</div>;
+    },
   }),
   columnHelper.accessor("actions", {
     header: "Actions",
     cell: ({ row }) => {
       return (
         <div className="mx-4">
-          <AmcRowActions amc={row.original as AmcProps} />
+          <AmcRowActions editBtn={editBtn} amc={row.original as AmcProps} />
         </div>
       );
     },
   }),
 ];
 
-export function AmcListTable({}) {
+export function AmcListTable({
+  createBtn: CreateBtn,
+  productId,
+  editBtn,
+}: {
+  productId?: string;
+  createBtn?: () => React.ReactNode;
+  editBtn?: ({ state }: { state: any }) => React.ReactNode;
+}) {
   const { data, isLoading } = useQuery({
     queryFn: () =>
       sdk.client.fetch(`/admin/amc`, {
         method: "GET",
+        query: {
+          product_id: productId,
+        },
       }),
     queryKey: ["amc"],
     refetchOnMount: "always",
@@ -60,7 +77,7 @@ export function AmcListTable({}) {
 
   const table = useDataTable({
     data: amcData,
-    columns: columns as unknown as any,
+    columns: columns(editBtn),
     rowCount: amcData?.length,
     isLoading,
     pagination: {
@@ -77,11 +94,22 @@ export function AmcListTable({}) {
       <DataTable instance={table}>
         <DataTable.Toolbar className="flex justify-between items-center">
           <Heading>AMC</Heading>
-          <Button size="small" variant="secondary" asChild>
-            <Link to="create">Create</Link>
-          </Button>
+          {CreateBtn ? (
+            <CreateBtn />
+          ) : (
+            <Button size="small" variant="secondary" asChild>
+              <Link to="create">Create</Link>
+            </Button>
+          )}
         </DataTable.Toolbar>
-        <DataTable.Table />
+        <DataTable.Table
+          emptyState={{
+            empty: {
+              heading: "No AMC available",
+              description: "No AMC found for this product",
+            },
+          }}
+        />
         <DataTable.Pagination />
       </DataTable>
     </Container>

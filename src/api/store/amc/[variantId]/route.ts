@@ -46,7 +46,6 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
       }
     );
     res.send({
-      // data: data?.[0],
       data: [data?.[0]?.amc].flat().map((amc) => ({
         ...amc,
         price: price.find((x) => x.id === amc.price_set.id),

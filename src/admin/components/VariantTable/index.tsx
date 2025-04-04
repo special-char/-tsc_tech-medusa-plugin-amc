@@ -12,7 +12,6 @@ import { Heading } from "@medusajs/ui";
 import { DataTable } from "@medusajs/ui";
 import { useMemo, useState, useCallback } from "react";
 import { sdk } from "../../lib/sdk";
-import { useVariantTableQuery } from "../../hooks/use-variant-table-query";
 import { useQuery } from "@tanstack/react-query";
 import { clx } from "@medusajs/ui";
 import { Photo } from "@medusajs/icons";
@@ -20,10 +19,10 @@ import ErrorMessage from "../ErrorMessage";
 
 type Props = {
   form: UseFormReturn<any, any, undefined>;
+  productId?: string;
 };
 
 const VARIANT_PAGE_SIZE = 10;
-// const VARIANT_PREFIX = "variant";
 const columnHelper = createDataTableColumnHelper<any>();
 const columns = (props: Props) => [
   columnHelper.select({
@@ -153,12 +152,10 @@ const columns = (props: Props) => [
 
 const VariantTable = (props: Props) => {
   const [pageIndex, setPageIndex] = useState(0);
-
-  // const { searchParams: variantSearchParams } = useVariantTableQuery({
-  //   pageSize: VARIANT_PAGE_SIZE,
-  //   prefix: VARIANT_PREFIX,
-  // });
-
+  const endpoint = props.productId
+    ? `/admin/products/${props.productId}/variants`
+    : "/admin/product-variants";
+  const fields = props.productId ? "*product" : undefined;
   const [searchValue, setSearchValue] = useState("");
   const { data: variants, isLoading } = useQuery<{
     variants: [];
@@ -167,18 +164,19 @@ const VariantTable = (props: Props) => {
     offset: number;
   }>({
     queryFn: () =>
-      sdk.client.fetch(`/admin/product-variants`, {
+      sdk.client.fetch(endpoint, {
         headers: {},
         query: {
-          // ...variantSearchParams,
+          fields,
           offset: pageIndex * VARIANT_PAGE_SIZE,
           limit: VARIANT_PAGE_SIZE,
           q: searchValue || undefined,
         },
       }),
-    queryKey: ["product-variants", searchValue, pageIndex],
+    queryKey: ["product-variants", searchValue, pageIndex, endpoint],
     staleTime: 30000,
   });
+
   const [variantSelection, setVariantSelection] =
     useState<DataTableRowSelectionState>({});
   const variantData = useMemo(() => {
@@ -220,6 +218,7 @@ const VariantTable = (props: Props) => {
       }, []),
     },
   });
+
   return (
     <div>
       <DataTable instance={table}>

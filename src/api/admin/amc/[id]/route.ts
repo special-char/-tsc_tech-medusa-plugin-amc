@@ -18,7 +18,6 @@ export const POST = async (
 ) => {
   const { variant_id, prices, ...rest } = req.body;
 
-  // first store amc details
   const amcService: AMCModuleService = req.scope.resolve(AMC_MODULE);
 
   const amc = await amcService.updateAmcs({
@@ -26,7 +25,6 @@ export const POST = async (
     ...rest,
   });
 
-  // add product amc link
   const remoteLink = container.resolve("remoteLink");
 
   // first list all existing variant and take difference to get the new variant and delete the not existing variant

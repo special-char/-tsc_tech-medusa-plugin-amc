@@ -68,6 +68,25 @@ export const POST = async (
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const query = req.scope.resolve("query");
+  const { product_id } = req.query;
+  const amcIds: string[] = [];
+  let filters: any;
+  if (product_id) {
+    const { data } = await query.graph({
+      entity: "product",
+      fields: ["*", "variants.*", "variants.amc.*"],
+      filters: {
+        id: product_id,
+      },
+    });
+    const amcs = data?.[0]?.variants?.map((v: any) => v?.amc).flat();
+    amcs?.forEach((amc) => {
+      amcIds?.push(amc?.id);
+    });
+    filters = {
+      id: amcIds,
+    };
+  }
   const amc = await query.graph({
     entity: "amc",
     fields: [
@@ -76,6 +95,7 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
       "product_variants.*",
       "price_set.prices.price_rules.value",
     ],
+    filters,
   });
   res.send(amc);
 };

@@ -1,8 +1,9 @@
-import { PencilSquare, Trash } from "@medusajs/icons";
+import { PencilSquare } from "@medusajs/icons";
 import { useNavigate } from "react-router-dom";
-import { IconButton, Prompt } from "@medusajs/ui";
+import { IconButton } from "@medusajs/ui";
 
 type AmcRowActionsProps = {
+  editBtn?: ({ state }: { state: any }) => React.ReactNode;
   amc: AmcProps;
 };
 export type Event = {
@@ -26,31 +27,26 @@ export interface AmcProps {
   event_name: string;
 }
 
-export const AmcRowActions = ({ amc }: AmcRowActionsProps) => {
+export const AmcRowActions = ({
+  amc,
+  editBtn: EditBtn,
+}: AmcRowActionsProps) => {
   const navigation = useNavigate();
-  // const handleDelete = async () => {
-  //   await sdk.client.fetch(
-  //     `/admin/notification-template/${notificationTemplate.id}`,
-  //     {
-  //       method: "DELETE",
-  //     }
-  //   );
-
-  //   navigation("/notification-template");
-  //   navigation(0);
-  // };
-
   return (
     <div className="flex">
-      <IconButton
-        onClick={() =>
-          navigation(`/amc/edit`, {
-            state: amc,
-          })
-        }
-      >
-        <PencilSquare />
-      </IconButton>
+      {EditBtn ? (
+        <EditBtn state={amc} />
+      ) : (
+        <IconButton
+          onClick={() =>
+            navigation(`/amc/edit`, {
+              state: amc,
+            })
+          }
+        >
+          <PencilSquare />
+        </IconButton>
+      )}
     </div>
   );
 };

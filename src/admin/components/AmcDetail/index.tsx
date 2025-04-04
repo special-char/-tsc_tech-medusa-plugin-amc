@@ -1,7 +1,6 @@
 import { Controller, UseFormReturn } from "react-hook-form";
 import { RouteFocusModal } from "../common/modals";
 import { KeyboundForm } from "../common/keybound-form";
-
 import {
   Button,
   Input,
@@ -14,11 +13,13 @@ import { Spinner } from "@medusajs/icons";
 import ErrorMessage from "../ErrorMessage";
 import VariantPricingForm from "../VariantPricingForm";
 import VariantTable from "../VariantTable";
+import Required from "../common/Required";
 
 type Props = {
   form: UseFormReturn<any, any, undefined>;
   onSubmit: (data: any) => void;
   amcId?: string;
+  productId?: string;
 };
 
 export enum AmcCreateTab {
@@ -29,6 +30,7 @@ export enum AmcCreateTab {
 
 type TabState = Record<AmcCreateTab, ProgressStatus>;
 const AmcDetail = (props: Props) => {
+  const isProduct = !!props.productId;
   const [tab, setTab] = useState<AmcCreateTab>(AmcCreateTab.AMC_DETAILS);
 
   const [tabState, setTabState] = useState<TabState>({
@@ -38,7 +40,6 @@ const AmcDetail = (props: Props) => {
   });
 
   const handleTabChange = async (tab: AmcCreateTab) => {
-    // Don't do anything if trying to navigate to current tab
     if (tab === AmcCreateTab.AMC_DETAILS) {
       setTab(tab);
       setTabState((prev) => ({
@@ -49,8 +50,6 @@ const AmcDetail = (props: Props) => {
       }));
       return;
     }
-
-    // For other tabs, validate required fields
     if (tab === AmcCreateTab.AMC_PRODUCTS) {
       const valid = await props.form.trigger([
         "title",
@@ -71,7 +70,6 @@ const AmcDetail = (props: Props) => {
       }));
       return;
     }
-
     if (tab === AmcCreateTab.AMC_PRICE) {
       const variant = props.form.watch("variant_id");
 
@@ -107,7 +105,6 @@ const AmcDetail = (props: Props) => {
   const handleContinue = async () => {
     switch (tab) {
       case AmcCreateTab.AMC_DETAILS: {
-        // Validate region before continuing
         const valid = await props.form.trigger([
           "title",
           "sku",
@@ -146,11 +143,15 @@ const AmcDetail = (props: Props) => {
     }
   };
 
+  const ParentComponent = isProduct ? "div" : RouteFocusModal;
+  const HeaderComponent = isProduct ? "div" : RouteFocusModal.Header;
+  const BodyComponent = isProduct ? "div" : RouteFocusModal.Body;
+  const FooterComponent = isProduct ? "div" : RouteFocusModal.Footer;
   return (
-    <RouteFocusModal>
+    <ParentComponent className="flex flex-1">
       <KeyboundForm
         hidden={true}
-        className="flex h-full flex-col"
+        className="flex h-full flex-1 flex-col"
         onSubmit={props.form.handleSubmit(props.onSubmit)}
       >
         <ProgressTabs
@@ -158,12 +159,12 @@ const AmcDetail = (props: Props) => {
           onValueChange={(v) => handleTabChange(v as AmcCreateTab)}
           className="flex h-full flex-col overflow-hidden"
         >
-          <RouteFocusModal.Header>
+          <HeaderComponent>
             <div className="flex w-full items-center justify-between gap-x-4">
               <div className="-my-2 w-full max-w-[600px] border-l">
-                <ProgressTabs.List className="grid w-full grid-cols-4">
+                <ProgressTabs.List className="grid w-full  grid-cols-4">
                   <ProgressTabs.Trigger
-                    className="w-full"
+                    className={`w-full`}
                     value={AmcCreateTab.AMC_DETAILS}
                     status={tabState[AmcCreateTab.AMC_DETAILS]}
                   >
@@ -171,14 +172,14 @@ const AmcDetail = (props: Props) => {
                   </ProgressTabs.Trigger>
 
                   <ProgressTabs.Trigger
-                    className="w-full"
+                    className={`w-full`}
                     value={AmcCreateTab.AMC_PRODUCTS}
                     status={tabState[AmcCreateTab.AMC_PRODUCTS]}
                   >
                     AMC Products
                   </ProgressTabs.Trigger>
                   <ProgressTabs.Trigger
-                    className="w-full"
+                    className={`w-full`}
                     value={AmcCreateTab.AMC_PRICE}
                     status={tabState[AmcCreateTab.AMC_PRICE]}
                   >
@@ -187,8 +188,8 @@ const AmcDetail = (props: Props) => {
                 </ProgressTabs.List>
               </div>
             </div>
-          </RouteFocusModal.Header>
-          <RouteFocusModal.Body className="size-full overflow-hidden">
+          </HeaderComponent>
+          <BodyComponent className="size-full overflow-hidden">
             <ProgressTabs.Content
               value={AmcCreateTab.AMC_DETAILS}
               className="flex flex-col items-center overflow-y-auto"
@@ -201,7 +202,9 @@ const AmcDetail = (props: Props) => {
                   render={({ field }) => {
                     return (
                       <div>
-                        <Label>Title</Label>
+                        <Label>
+                          Title <Required />
+                        </Label>
                         <Input
                           className="m-0 gap-0"
                           placeholder="AMC 1"
@@ -216,7 +219,6 @@ const AmcDetail = (props: Props) => {
                   <Controller
                     control={props.form.control}
                     name="sku"
-                    rules={{ required: "SKU is required" }}
                     render={({ field }) => {
                       return (
                         <div>
@@ -238,7 +240,9 @@ const AmcDetail = (props: Props) => {
                     render={({ field }) => {
                       return (
                         <div>
-                          <Label>Duration (in Days)</Label>
+                          <Label>
+                            Duration (in Days) <Required />
+                          </Label>
                           <Input
                             autoComplete="off"
                             type="number"
@@ -253,7 +257,6 @@ const AmcDetail = (props: Props) => {
                   <Controller
                     control={props.form.control}
                     name="barcode"
-                    rules={{ required: "Barcode is required" }}
                     render={({ field }) => {
                       return (
                         <div>
@@ -273,17 +276,15 @@ const AmcDetail = (props: Props) => {
             </ProgressTabs.Content>
 
             <ProgressTabs.Content value={AmcCreateTab.AMC_PRODUCTS}>
-              <VariantTable form={props.form} />
-              {/* <Container>
-              </Container> */}
+              <VariantTable form={props.form} productId={props.productId} />
             </ProgressTabs.Content>
 
             <ProgressTabs.Content value={AmcCreateTab.AMC_PRICE}>
               <VariantPricingForm form={props.form} />
             </ProgressTabs.Content>
-          </RouteFocusModal.Body>
+          </BodyComponent>
         </ProgressTabs>
-        <RouteFocusModal.Footer>
+        <FooterComponent className="p-4">
           <div className="flex items-center justify-end gap-x-2">
             <RouteFocusModal.Close asChild>
               <Button variant="secondary" size="small">
@@ -310,9 +311,9 @@ const AmcDetail = (props: Props) => {
               )}
             </Button>
           </div>
-        </RouteFocusModal.Footer>
+        </FooterComponent>
       </KeyboundForm>
-    </RouteFocusModal>
+    </ParentComponent>
   );
 };
 
